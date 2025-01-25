@@ -1,0 +1,113 @@
+﻿{
+  "root": {
+    "userId": 838751715,
+    "userName": "554316a4-057b-4352-91c3-8c9b5f3caf0d",
+    "leftChild": {
+      "userId": 209520381,
+      "userName": "35bd5249-c687-4c3c-bded-c53105d1d847",
+      "leftChild": {
+        "userId": 41444147,
+        "userName": "04e30231-d467-4dec-9f48-fc0f5fc12468",
+        "leftChild": {
+          "userId": 368438521,
+          "userName": "6b3b7370-0aeb-4fcc-b7fe-4b9bb8ec5de5",
+          "leftChild": {
+            "userId": 634610189,
+            "userName": "fc327a96-554b-418c-b5eb-d7be9820ad8d",
+            "leftChild": null,
+            "rightChild": null
+          },
+          "rightChild": {
+            "userId": 872298658,
+            "userName": "4d0dd7ac-5987-465a-ab04-223a13f42409",
+            "leftChild": null,
+            "rightChild": null
+          }
+        },
+        "rightChild": {
+          "userId": 186292678,
+          "userName": "2b1dc7b1-3727-45a9-9b19-fcfcebbc7f58",
+          "leftChild": {
+            "userId": 654896080,
+            "userName": "928be221-e4ff-44e4-a0ba-f5a1ec629c58",
+            "leftChild": null,
+            "rightChild": null
+          },
+          "rightChild": {
+            "userId": 369286885,
+            "userName": "64b1a6c9-ccb4-45e5-afdf-8be9cc05cf75",
+            "leftChild": null,
+            "rightChild": null
+          }
+        }
+      },
+      "rightChild": {
+        "userId": 170540021,
+        "userName": "7ce5e055-3579-4622-855f-e8e3c96dcee7",
+        "leftChild": {
+          "userId": 992697577,
+          "userName": "43b252ec-111c-4d6a-82a7-be02a04217fc",
+          "leftChild": {
+            "userId": 899104894,
+            "userName": "dab403b4-7c1a-44f4-af53-d3f3ae3de04b",
+            "leftChild": null,
+            "rightChild": null
+          },
+          "rightChild": {
+            "userId": 19987326,
+            "userName": "4fd3c2f4-d3cb-40b2-b093-d321606b6233",
+            "leftChild": null,
+            "rightChild": null
+          }
+        },
+        "rightChild": {
+          "userId": 404853281,
+          "userName": "5f5a3cbc-0c9c-4d7b-95cd-25e453f84cba",
+          "leftChild": {
+            "userId": 789735489,
+            "userName": "b4f1b4ba-8de8-44ad-9012-8ed3fe1c2da1",
+            "leftChild": null,
+            "rightChild": null
+          },
+          "rightChild": null
+        }
+      }
+    },
+    "rightChild": {
+      "userId": 702260056,
+      "userName": "f4270b10-446f-4025-9ed1-17a635de1f47",
+      "leftChild": {
+        "userId": 937988595,
+        "userName": "69ba157b-17bc-455c-9cdc-c0e2fc40d8b9",
+        "leftChild": {
+          "userId": 212969473,
+          "userName": "abf601f1-54eb-4058-996f-4aabb8871fa6",
+          "leftChild": null,
+          "rightChild": null
+        },
+        "rightChild": {
+          "userId": 463074090,
+          "userName": "55db9fe0-639f-43ac-bd94-8c5b2dc2c16e",
+          "leftChild": null,
+          "rightChild": null
+        }
+      },
+      "rightChild": {
+        "userId": 597304662,
+        "userName": "76d447f8-ffbc-4168-a568-0a90fd9a7332",
+        "leftChild": {
+          "userId": 13403223,
+          "userName": "3c914d8b-4450-47b4-9e14-4ea401a47952",
+          "leftChild": null,
+          "rightChild": null
+        },
+        "rightChild": {
+          "userId": 578232106,
+          "userName": "adaad2ca-7ccb-48ff-a3d4-f74d32022c94",
+          "leftChild": null,
+          "rightChild": null
+        }
+      }
+    }
+  }
+}
