@@ -3,6 +3,7 @@ using Enums;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using Models;
+using Xunit.Abstractions;
 
 namespace Core;
 
@@ -14,6 +15,8 @@ public class SmartContractExecutor
 
     public SmartContractExecutor(Server server)
         => _server = server;
+    
+    readonly ITestOutputHelper _output;
 
     public async Task<string> ExecuteAsync(SmartContract contract, SmartContractContext context)
     {
@@ -23,7 +26,7 @@ public class SmartContractExecutor
         stopwatch.Stop();
         ticks = stopwatch.ElapsedTicks;
         nanosegundos = (ticks / (double)Stopwatch.Frequency) * 1_000_000;
-        Console.WriteLine($"valida a configured in {this.nanosegundos} nns");
+        _output.WriteLine($"valida a configured in {this.nanosegundos} nns");
         stopwatch.Restart();
         try
         {
@@ -35,19 +38,19 @@ public class SmartContractExecutor
             stopwatch.Stop();
             ticks = stopwatch.ElapsedTicks;
             nanosegundos = (ticks / (double)Stopwatch.Frequency) * 1_000_000;
-            Console.WriteLine($"valida a contrato in {nanosegundos} nns");
+            _output.WriteLine($"valida a contrato in {nanosegundos} nns");
             stopwatch.Restart();
             var result = await context.OnContractContext(contract, context);
             stopwatch.Stop();
             ticks = stopwatch.ElapsedTicks;
             nanosegundos = (ticks / (double)Stopwatch.Frequency) * 1_000_000;
-            Console.WriteLine($"executa o contrato in {nanosegundos} nns");
+            _output.WriteLine($"executa o contrato in {nanosegundos} nns");
             stopwatch.Restart();
             _server.ValidationOperation(contract);
             stopwatch.Stop();
             ticks = stopwatch.ElapsedTicks;
             nanosegundos = (ticks / (double)Stopwatch.Frequency) * 1_000_000;
-            Console.WriteLine($"salve contract in {nanosegundos} nns");
+            _output.WriteLine($"salve contract in {nanosegundos} nns");
             return result;
         }
         catch (CompilationErrorException ex)
