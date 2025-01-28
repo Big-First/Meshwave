@@ -2,6 +2,8 @@
 using System.Net.WebSockets;
 using System.Text;
 using Enums;
+using Meshwave.Singletons;
+using Models;
 
 namespace Core;
 
@@ -9,6 +11,7 @@ public class Node
 {
     public Node(){}
     public string userId { get; set; }
+    public decimal stake { get; set; }
     public WebSocket socket;
     public Node leftChild { get; set; }
     public Node rightChild { get; set; }
@@ -26,6 +29,19 @@ public class Node
     {
         var buffer = new Message().ConcatenateByteArrays(RequestCode.User, ActionCode.UserId, userId);
         await SendData(buffer);
+    }
+
+    public Block ValidationOperation(Block previus)
+    {
+        var block = new Block(Guid.NewGuid(), DateTime.Now, previus.hash);
+        if (IsPreviusBlock(block, previus)) return block;
+        return null;
+    }
+    
+    public static bool IsPreviusBlock(Block block, Block previus)
+    {
+        if (previus == null) throw new ArgumentNullException(nameof(previus));
+        return previus.IsValid(block, previus);
     }
     
     public async Task Echo(HttpContext context, WebSocket webSocket)

@@ -1,14 +1,17 @@
 ﻿using System.Net.WebSockets;
+using Meshwave.Singletons;
 
 namespace Core;
 
 public class NodeBinaryTree
 {
     public Node root { get; set; }
-    private Queue<Node> _levelOrderQueue = new Queue<Node>(); // Para garantir a inserção na última posição livre
+    private Queue<Node> _levelOrderQueue = new Queue<Node>();
+    Server _server { get; set; }
     
-    public NodeBinaryTree()
+    public NodeBinaryTree(Server server)
     {
+        _server = server;
         root = null;
     }
 
@@ -79,7 +82,13 @@ public class NodeBinaryTree
 
         return newNode;
     }
-    
+
+    public Node SelectValidator(Node _node)
+    {
+        _node.stake += (decimal)Singleton.Instance().stake;
+        return _node;
+    }
+
     // Método para percorrer a árvore e adicionar nós não preenchidos na fila
     public void AddUnfilledNodesToQueue()
     {
