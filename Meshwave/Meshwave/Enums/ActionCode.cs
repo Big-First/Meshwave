@@ -1,4 +1,6 @@
-﻿namespace Enums;
+﻿using MessagePack;
+
+namespace Enums;
 
 public enum ActionCode
 {
@@ -46,4 +48,6 @@ public enum ActionCode
     Session = 41,
     Clock = 42,
     Reset = 43,
+    Operation,
+    Block,
 }

@@ -18,10 +18,6 @@ public class RedisService
         string json = JsonSerializer.Serialize(obj);
         await _database.StringSetAsync(key, json);
     }
-
-    /// <summary>
-    /// Recupera um objeto do Redis pela chave especificada.
-    /// </summary>
     public async Task<T?> GetObjectAsync<T>(string key)
     {
         string? json = await _database.StringGetAsync(key);

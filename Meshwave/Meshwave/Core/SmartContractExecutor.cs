@@ -1,7 +1,4 @@
 ﻿using System.Diagnostics;
-using Enums;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
-using Microsoft.CodeAnalysis.Scripting;
 using Models;
 using Xunit.Abstractions;
 
@@ -26,7 +23,7 @@ public class SmartContractExecutor
         stopwatch.Stop();
         ticks = stopwatch.ElapsedTicks;
         nanosegundos = (ticks / (double)Stopwatch.Frequency) * 1_000_000;
-        _output.WriteLine($"valida a configured in {this.nanosegundos} nns");
+        //Console.WriteLine($"valida a configured in {this.nanosegundos} nns");
         stopwatch.Restart();
         try
         {
@@ -38,24 +35,21 @@ public class SmartContractExecutor
             stopwatch.Stop();
             ticks = stopwatch.ElapsedTicks;
             nanosegundos = (ticks / (double)Stopwatch.Frequency) * 1_000_000;
-            _output.WriteLine($"valida a contrato in {nanosegundos} nns");
+            //Console.WriteLine($"valida a contrato in {nanosegundos} nns");
             stopwatch.Restart();
             var result = await context.OnContractContext(contract, context);
+            contract.code = result;
             stopwatch.Stop();
             ticks = stopwatch.ElapsedTicks;
             nanosegundos = (ticks / (double)Stopwatch.Frequency) * 1_000_000;
-            _output.WriteLine($"executa o contrato in {nanosegundos} nns");
+            //Console.WriteLine($"executa o contrato in {nanosegundos} nns");
             stopwatch.Restart();
-            _server.ValidationOperation(contract);
+            _server.CallValidator(contract);
             stopwatch.Stop();
             ticks = stopwatch.ElapsedTicks;
             nanosegundos = (ticks / (double)Stopwatch.Frequency) * 1_000_000;
-            _output.WriteLine($"salve contract in {nanosegundos} nns");
+            //Console.WriteLine($"salve contract in {nanosegundos} nns");
             return result;
-        }
-        catch (CompilationErrorException ex)
-        {
-            return $"Contract compilation failed: {string.Join(", ", ex.Diagnostics)}";
         }
         catch (Exception ex)
         {

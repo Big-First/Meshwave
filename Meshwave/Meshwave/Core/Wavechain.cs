@@ -1,4 +1,5 @@
-﻿using Data;
+﻿using System.Text.Json;
+using Data;
 using Models;
 
 namespace Core;
@@ -7,12 +8,12 @@ public class Wavechain
 {
     
     public Block root { get; set; }
-    public int difficulty { get; set; } // Dificuldade da mineração
-    Server _server { get; set; }
+    public int difficulty; // Dificuldade da mineração
+    Node node { get; set; }
 
-    public Wavechain(Server server)
+    public Wavechain(Node node)
     {
-        _server = server;
+        this.node = node;
         root = null;
     }
 
@@ -21,28 +22,30 @@ public class Wavechain
         this.difficulty = difficulty;
     }
 
-    private Queue<Block> _levelOrderQueue = new Queue<Block>(); // Para garantir a inserção na última posição livre valida
+    private Queue<Block> _levelOrderQueue = new Queue<Block>();
 
     
     public async void WavechainPersistence(string id)
     {
+        /*
         if(!string.IsNullOrWhiteSpace(id))root = await _server._meshwavePersistence.LoadBlockchain(id);
-        _server._meshwavePersistence.SaveBlockchain(root);
+        _server._meshwavePersistence.SaveBlockchain(null);
         if (root == null)
         {
-            var genesisBlock = Insert(root);
-            _server._meshwavePersistence.SaveBlockchain(genesisBlock);
+            Insert(root);
+            _server._meshwavePersistence.SaveBlockchain(null);
         }
+        */
     }
     
     // Inserção na árvore binária
-    public Block Insert( Block _block)
+    public void Insert( Block block)
     {
-        Block newNode = _block;
+        Block newNode = block;
         if (root == null)
         {
             root = newNode;
-            root.CalculateHash();
+            root.CalculateHash(2);
         }
         else
         {
@@ -65,18 +68,12 @@ public class Wavechain
                     // Verifica se há espaço no nó atual
                     if (node.left == null)
                     {
-                        newNode = new Block(Guid.NewGuid(),DateTime.Now, node.hash);
-                        newNode.previousHash = node.hash;
-                        newNode.CalculateHash();
                         node.left = newNode; // Inserir no filho esquerdo
                         inserted = true;
                         break;
                     }
                     else if (node.right == null)
                     {
-                        newNode = new Block(Guid.NewGuid(),DateTime.Now, node.hash);
-                        newNode.previousHash = node.hash;
-                        newNode.CalculateHash();
                         node.right = newNode; // Inserir no filho direito
                         inserted = true;
                         break;
@@ -105,8 +102,134 @@ public class Wavechain
             // Enfileira o novo nó para garantir que a próxima inserção ocupe a próxima posição livre
             _levelOrderQueue.Enqueue(newNode);
         }
+    }
+    
+    public Block GetBlock()
+    {
+        if (root == null)
+        {
+            return null;
+        }
+        else
+        {
+            // Verificar se há um espaço disponível na árvore
+            bool inserted = false;
 
-        return newNode;
+            // Percorrer todos os níveis e verificar onde existe espaço
+            var currentLevelNodes = new Queue<Block>();
+            currentLevelNodes.Enqueue(root);
+
+            while (currentLevelNodes.Count > 0 && !inserted)
+            {
+                int levelNodeCount = currentLevelNodes.Count;
+                var nextLevelNodes = new Queue<Block>();
+
+                for (int i = 0; i < levelNodeCount; i++)
+                {
+                    var node = currentLevelNodes.Dequeue();
+
+                    // Verifica se há espaço no nó atual
+                    if (node.left == null)
+                    {
+                        return node;
+                    }
+                    else if (node.right == null)
+                    {
+                        return node.left;
+                    }
+
+                    // Se o nó tem filhos, adicione-os ao próximo nível
+                    if (node.left != null)
+                    {
+                        nextLevelNodes.Enqueue(node.left);
+                    }
+                    if (node.right != null)
+                    {
+                        nextLevelNodes.Enqueue(node.right);
+                    }
+                }
+
+                // Se o nó foi inserido, parar o loop
+                if (inserted)
+                {
+                    break;
+                }
+
+                // Caso contrário, continue para o próximo nível
+                currentLevelNodes = nextLevelNodes;
+            }
+        }
+
+        return null;
+    }
+
+    private bool AddBlock(SmartContract smartContract)
+    {
+        var newBlock = new Block(Guid.NewGuid(), DateTime.UtcNow,FindLastHash(root),smartContract.code);
+        newBlock.MineBlock(difficulty);
+        return AddToTree(root, newBlock);
+    }
+    private bool AddToTree(Block parent, Block newBlock)
+    {
+        if (parent.left == null)
+        {
+            parent.left = newBlock;
+            return true;
+        }
+
+        if (parent.right == null)
+        {
+            parent.right = newBlock;
+            return true;
+        }
+
+        // Recursively add to the left and right subtrees
+        var addedToLeft = AddToTree(parent.left, newBlock);
+        if (!addedToLeft)
+        {
+            return AddToTree(parent.right, newBlock);
+        }
+
+        return addedToLeft;
+    }
+    private string FindLastHash(Block current)
+    {
+        if (current == null) return "";
+
+        if (current.left == null || current.right == null)
+            return current.hash;
+
+        // Traverse to the deepest right-most node
+        return FindLastHash(current.right);
+    }
+
+    public void MineAndAddBlock(SmartContract smartContract, Node node)
+    {
+        if (AddBlock(smartContract))
+        {
+            Console.WriteLine($"{node.userId}: Block mined and added!");
+            var newBlock = GetLastBlock();
+            var message = JsonSerializer.Serialize(new { type = "NEW_BLOCK", block = newBlock, smartContract });
+            //_server.BroadcastMessage(message, null);
+        }
+    }
+    public  List<Block> GetLastBlock()
+    {
+        var lastBlocks = new List<Block>();
+        return lastBlocks;
+    }
+    public void PrintTree()
+    {
+        PrintNode(root, 0);
+    }
+        
+    private void PrintNode(Block node, int level)
+    {
+        if (node == null) return;
+
+        Console.WriteLine(new string(' ', level * 4) + node);
+        PrintNode(node.left, level + 1);
+        PrintNode(node.right, level + 1);
     }
     
     // Método para percorrer a árvore e adicionar nós não preenchidos na fila

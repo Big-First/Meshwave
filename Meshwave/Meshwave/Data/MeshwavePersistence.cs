@@ -15,8 +15,8 @@ public class MeshwavePersistence
 
     public async Task SaveBlockchain(Block block)
     {
-        _blocks.Enqueue(block);
-        _signal.Release();
+        var _redisService = new RedisService();
+        await _redisService.SaveObjectAsync(block.index.ToString(), block);
     }
 
     private async Task<Block> GetGenesys(string Id)
