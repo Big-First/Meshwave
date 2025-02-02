@@ -17,11 +17,11 @@ public class ContractValidationRequest
     [Key(3)]
     public ActionCode actionCode { get; set; }
     [Key(4)]
-    public string previousHash { get; set; }
+    public byte[] previousHash { get; set; }
     [Key(5)]
     public Block block { get; set; }
 
-    public ContractValidationRequest(string userId, SmartContract contract, RequestCode requestCode, ActionCode actionCode, string previousHash, Block block)
+    public ContractValidationRequest(string userId, SmartContract contract, RequestCode requestCode, ActionCode actionCode, byte[] previousHash, Block block)
     {
         this.userId = userId;
         this.contract = contract;

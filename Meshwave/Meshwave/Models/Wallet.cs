@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Collections.ObjectModel;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Models;
@@ -7,14 +8,14 @@ public class Wallet
 {
     public string publicKey { get; set; }
     public string privateKey { get; set; }
-    public List<SmartContract> balance { get; set; }
+    public ReadOnlyCollection<SmartContract> balance { get; }
     public DateTime timeSpam { get; set; }
     public byte[] data { get; set; }
     public Wallet(string publicKey, string privateKey, List<SmartContract> balance, DateTime timeSpam, byte[] data)
     {
         this.publicKey = publicKey;
         this.privateKey = privateKey;
-        this.balance = balance;
+        this.balance = balance.AsReadOnly();
         this.timeSpam = timeSpam;
         this.data = data;
     }
@@ -22,7 +23,6 @@ public class Wallet
     public Wallet()
     {
         GenerateKeys();
-        balance = new ();
         timeSpam = DateTime.Now;
         data = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes($"{(privateKey).Replace("-", "")}{(privateKey).Replace("-", "")}{publicKey}{timeSpam}"));
     }

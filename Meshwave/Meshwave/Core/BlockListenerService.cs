@@ -18,7 +18,7 @@ public class BlockListenerService : BackgroundService
 
     private void OnBlockAdded(object? sender, ValidationBlock block)
     {
-        Console.WriteLine($"{block.userId} \t Novo bloco adicionado: hash {block.block.hash} \t Timestamp {block.block.timestamp}");
+        Console.WriteLine($"Novo bloco : hash {Convert.ToBase64String(block.block.hash)} \t  {DateTime.UtcNow}");
         //_server.ValidationBlockchain(block);
     }
 

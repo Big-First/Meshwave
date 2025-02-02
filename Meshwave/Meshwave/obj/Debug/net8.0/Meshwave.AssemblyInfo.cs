@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Meshwave")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+40d611d847acf9c696f6e0fe91495b94a2386923")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4146211d6db550cb3bccb538d62626abde39be3a")]
 [assembly: System.Reflection.AssemblyProductAttribute("Meshwave")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Meshwave")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

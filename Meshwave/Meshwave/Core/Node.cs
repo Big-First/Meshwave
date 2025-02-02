@@ -43,7 +43,7 @@ public class Node
     }
     public async Task SendWelcomeMessage(WebSocket webSocket)
     {
-        var buffer = ObjectSerialization.Serialize(new ContractValidationRequest(userId.ToString(), null, RequestCode.User, ActionCode.UserId, "", null));
+        var buffer = ObjectSerialization.Serialize(new ContractValidationRequest(userId.ToString(), null, RequestCode.User, ActionCode.UserId, new byte[0], null));
         await SendData(buffer);
     }
     

@@ -49,7 +49,7 @@ public class Server
         if (validator != null)
         {
             var lastBlock = validator._wavechain.GetBlock();
-            string previusHash = lastBlock == null ? "" : lastBlock.hash; 
+            byte[] previusHash = lastBlock == null ? new byte[0] : lastBlock.hash; 
             //string obj = $"{{{contract.code}}}{{{previusHash}}}{{{contract.data}}}";
             var serial = ObjectSerialization.Serialize(new ContractValidationRequest(validator.userId.ToString(), contract, RequestCode.Validation, ActionCode.Operation, previusHash, lastBlock));
             //var obj = new ContractValidationRequest(contract,lastBlock == null? new byte[0]:lastBlock.hash));

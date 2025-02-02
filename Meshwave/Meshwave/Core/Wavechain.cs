@@ -45,7 +45,7 @@ public class Wavechain
         if (root == null)
         {
             root = newNode;
-            root.CalculateHash(2);
+            root.CalculateHash(new byte[0]);
         }
         else
         {
@@ -165,8 +165,7 @@ public class Wavechain
 
     private bool AddBlock(SmartContract smartContract)
     {
-        var newBlock = new Block(Guid.NewGuid(), DateTime.UtcNow,FindLastHash(root),smartContract.code);
-        newBlock.MineBlock(difficulty);
+        var newBlock = new Block(Guid.NewGuid(), DateTime.UtcNow,FindLastHash(root), "", new byte[0]);
         return AddToTree(root, newBlock);
     }
     private bool AddToTree(Block parent, Block newBlock)
@@ -192,9 +191,9 @@ public class Wavechain
 
         return addedToLeft;
     }
-    private string FindLastHash(Block current)
+    private byte[] FindLastHash(Block current)
     {
-        if (current == null) return "";
+        if (current == null) return new byte[0];
 
         if (current.left == null || current.right == null)
             return current.hash;

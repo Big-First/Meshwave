@@ -15,14 +15,14 @@ public class BlockchainTree
 
         private Block CreateGenesisBlock()
         {
-            var genesisBlock = new Block(Guid.NewGuid(), DateTime.Now,  "", "");
+            var genesisBlock = new Block(Guid.NewGuid(), DateTime.Now,  new byte[0], "", new byte[0]);
             //genesisBlock.MineBlock(_difficulty);
             return genesisBlock;
         }
 
-        private string FindLastHash(Block current)
+        private byte[] FindLastHash(Block current)
         {
-            if (current == null) return "";
+            if (current == null) return new byte[0];
 
             if (current.left == null || current.right == null)
                 return current.hash;
