@@ -1,8 +1,10 @@
-﻿using System.Net.Sockets;
+﻿using System.Collections.Concurrent;
+using System.Net;
+using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Text;
+using System.Text.Json;
 using Enums;
-using Meshwave.Singletons;
 using Models;
 
 namespace Core;
@@ -10,38 +12,39 @@ namespace Core;
 public class Node
 {
     public Node(){}
-    public string userId { get; set; }
-    public decimal stake { get; set; }
+    public Wavechain _wavechain { get; set; }
+    public Queue<Block> _blocks = new ();
+    public event EventHandler<Block>? BlockAdded;
+    public Guid userId { get; set; }
+    public DateTime timestamp { get; set; }
+    private readonly ConcurrentDictionary<WebSocket, Task> _peers;
     public WebSocket socket;
+    public Server server { get; set; }
     public Node leftChild { get; set; }
     public Node rightChild { get; set; }
     
-    public Node(string userName,WebSocket socket)
+    public Node(Guid userName, WebSocket socket,DateTime timestamp, Server server)
     {
         this.userId = userName;
         this.socket = socket;
+        this.server = server;
+        this.timestamp = timestamp;
+        _peers = new ConcurrentDictionary<WebSocket, Task>();
         this.leftChild = null;
         this.rightChild = null;
+        this._wavechain = new Wavechain(this);
         Console.WriteLine($"User connected: {userId}");
     }
-    
+    public void AddBlock(Block newBlock)
+    {
+        _blocks.Enqueue(newBlock);
+        
+        BlockAdded?.Invoke(this, newBlock);
+    }
     public async Task SendWelcomeMessage(WebSocket webSocket)
     {
-        var buffer = new Message().ConcatenateByteArrays(RequestCode.User, ActionCode.UserId, userId);
+        var buffer = ObjectSerialization.Serialize(new ContractValidationRequest(userId.ToString(), null, RequestCode.User, ActionCode.UserId, "", null));
         await SendData(buffer);
-    }
-
-    public Block ValidationOperation(Block previus)
-    {
-        var block = new Block(Guid.NewGuid(), DateTime.Now, previus.hash);
-        if (IsPreviusBlock(block, previus)) return block;
-        return null;
-    }
-    
-    public static bool IsPreviusBlock(Block block, Block previus)
-    {
-        if (previus == null) throw new ArgumentNullException(nameof(previus));
-        return previus.IsValid(block, previus);
     }
     
     public async Task Echo(HttpContext context, WebSocket webSocket)
@@ -61,13 +64,12 @@ public class Node
         }
         catch (WebSocketException ex)
         {
-            
             Console.WriteLine($" UserId : {userId} Error:{ex.Message}");
-            //if (webSocket.State != WebSocketState.Closed)_server.RemoveUser(this);
         }
     }
     public async Task SendData(byte[] msg)
     {
+        
         try
         {
             if (msg != null)
@@ -83,6 +85,11 @@ public class Node
 
     private void ProcessReceivedBytes(byte[] buffer, int resultCount)
     {
-        throw new NotImplementedException();
+        byte[] receivedData = new byte[resultCount];
+        Array.Copy(buffer, receivedData, resultCount);
+        ObjectSerialization.Deserialize(receivedData, OnProcessMessage);
     }
+
+    public void OnProcessMessage(RequestCode requestCode, ActionCode actionCode, ContractValidationRequest output)
+        => new ControllerManager().HandleRequest(requestCode, actionCode, output, this);
 }

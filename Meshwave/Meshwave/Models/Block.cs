@@ -1,43 +1,71 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
-using Microsoft.IdentityModel.Tokens;
+using MessagePack;
 
 namespace Models;
 
+[MessagePackObject]
 public class Block
 {
     public Block(){}
+    [Key(0)]
     public Guid index { get; set; }
+    [Key(1)]
     public DateTime timestamp { get; set; }
-    public byte[] data { get; set; }
-    public byte[] previousHash { get; set; }
-    public byte[] hash { get; set; }
-    public int nonce { get; private set; }
+    [Key(2)]
+    public string data { get; set; }
+    [Key(3)]
+    public string code { get; set; }
+    [Key(4)]
+    public string previousHash { get; set; }
+    [Key(5)]
+    public string hash { get; set; }
+    [Key(6)]
     public Block left { get; set; }
+    [Key(7)]
     public Block right { get; set; }
     
 
-    public Block(Guid index, DateTime timestamp, byte[] previousHash)
+    public Block(Guid index, DateTime timestamp, string previousHash, string code)
     {
         this.index = index;
         this.timestamp = timestamp;
-        data =  SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes($"{BitConverter.ToString(previousHash).Replace("-", "")}{BitConverter.ToString(previousHash).Replace("-", "")}{nonce}{timestamp}"));
+        data =  $"{(CalculateData()).Replace("-", "")}{("").Replace("-", "")}{timestamp}";
+        this.code = code;
         this.previousHash = previousHash;
-        hash = CalculateHash();
-        nonce = 0;
+        hash = CalculateHash(1);
+    }
+    
+    public string CalculateHash(int difficulty)
+    {
+        var target = new string('0', difficulty);
+        string blockData = $"{target}{index}{timestamp}{data}{previousHash}";
+        using (SHA256 sha256 = SHA256.Create())
+        {
+            byte[] inputBytes = Encoding.UTF8.GetBytes(blockData);
+            byte[] hashBytes = sha256.ComputeHash(inputBytes);
+            return Convert.ToBase64String(hashBytes);
+        }
+    }
+    public string CalculateData()
+    {
+        string blockData = $"{index}{timestamp}";
+        using (SHA256 sha256 = SHA256.Create())
+        {
+            byte[] inputBytes = Encoding.UTF8.GetBytes(blockData);
+            byte[] hashBytes = sha256.ComputeHash(inputBytes);
+            return Convert.ToBase64String(hashBytes);
+        }
     }
 
     public bool IsValid(Block currentBlock, Block previousBlock)
         => currentBlock.previousHash == previousBlock.hash;
-
-    public byte[] CalculateHash()
+    public void MineBlock(int difficulty)
     {
-        using (var sha256 = SHA256.Create())
+        var target = new string('0', difficulty);
+        while (!hash.ToString().StartsWith(target))
         {
-            var input = $"{"0x00"}{index}{timestamp}{Convert.ToBase64String(previousHash ?? new byte[0])}{data}";
-            return sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
+            CalculateHash(difficulty);
         }
     }
 }

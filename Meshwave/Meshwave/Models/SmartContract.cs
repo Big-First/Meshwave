@@ -1,19 +1,24 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
-using Microsoft.IdentityModel.Tokens;
+using MessagePack;
 
 namespace Models;
 
+[MessagePackObject]
 public class SmartContract
 {
     public SmartContract(){}
+    [Key(0)]
     public Guid contractId { get; set; }
+    [Key(1)]
     public string code { get; set; }
+    [Key(2)]
     public string data { get; set; }
+    [Key(3)]
     public byte[] hash { get; set; }
+    [Key(4)]
     public string creator { get; set; }
+    [Key(5)]
     public DateTime createdAt { get; set; }
 
     public SmartContract(Guid contractId, string code, string creator, DateTime createdAt)
@@ -28,7 +33,7 @@ public class SmartContract
     
     public string CalculateData()
     {
-        string blockData = $"{contractId}";
+        string blockData = $"{contractId}{createdAt}";
         using (SHA256 sha256 = SHA256.Create())
         {
             byte[] inputBytes = Encoding.UTF8.GetBytes(blockData);

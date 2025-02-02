@@ -9,10 +9,13 @@ namespace Hosts;
 
 public class Startup
 {
-    private Server _server = new Server();
+    Server _server = new Server();
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
+        services.AddSingleton(_server);
+        services.AddHostedService<UpdateService>();
+        services.AddHostedService<BlockListenerService>();
         services.AddSwaggerGen();
     }
 
@@ -35,7 +38,8 @@ public class Startup
                 if (context.WebSockets.IsWebSocketRequest)
                 {
                     var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                    var newNode =  _server._nodeTree.Insert(Guid.NewGuid().ToString(),webSocket);
+                    var newNode =  new Node(Guid.NewGuid(),webSocket,DateTime.Now, _server);
+                    _server.Insert(newNode);
                     await newNode.SendWelcomeMessage(webSocket);
                     await newNode.Echo(context, webSocket);
                 }
@@ -43,6 +47,7 @@ public class Startup
                 {
                     context.Response.StatusCode = 400;
                 }
+                _server.Update();
             });
             
             endpoints.MapGet("/status", async () =>
@@ -50,18 +55,18 @@ public class Startup
                 return $"Meshwave Service Is Running ... ! {DateTime.Now}";
             });
             
+            endpoints.MapGet("/createWallet", async () =>
+            {
+                return new Wallet();
+            });
+            
             endpoints.MapGet("/showTree", async () =>
             {
-                return $"{JsonSerializer.Serialize(_server._nodeTree)}";
-            });
-            endpoints.MapGet("/createBlock", async () =>
-            {
-                _server._wavechain.Insert(new Block());
-                return"200";
+                return _server.root;
             });
             endpoints.MapGet("/showBlocksTree", async () =>
             {
-                return _server._wavechain;
+                return _server.GetAllTrees();
             });
             endpoints.MapPost("/SmartContractTeste", async ([FromBody] SmartContract _user) =>
             {
