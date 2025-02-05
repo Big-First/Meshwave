@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using Data;
+using Models;
 
 namespace Core;
 
@@ -16,9 +17,11 @@ public class BlockListenerService : BackgroundService
         _server.BlockAdded += OnBlockAdded;
     }
 
-    private void OnBlockAdded(object? sender, ValidationBlock block)
+    private async void OnBlockAdded(object? sender, ValidationBlock block)
     {
-        Console.WriteLine($"Novo bloco : hash {Convert.ToBase64String(block.block.hash)} \t  {DateTime.UtcNow}");
+        Console.WriteLine($"Novo bloco : hash {block.block.index} \t  {DateTime.UtcNow}");
+        var _redisService = new RedisService();
+        await _redisService.SaveObjectAsync($"{block.block.index}", block.block);
         //_server.ValidationBlockchain(block);
     }
 

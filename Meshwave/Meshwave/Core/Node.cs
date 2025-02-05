@@ -2,8 +2,10 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Net.WebSockets;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using Data;
 using Enums;
 using Models;
 
@@ -12,16 +14,18 @@ namespace Core;
 public class Node
 {
     public Node(){}
-    public Wavechain _wavechain { get; set; }
+    public Wavechain _wavechain;
     public Queue<Block> _blocks = new ();
     public event EventHandler<Block>? BlockAdded;
     public Guid userId { get; set; }
+    public byte[] publicKey { get; set; }
+    public byte[] privateKey { get; set; }
     public DateTime timestamp { get; set; }
     private readonly ConcurrentDictionary<WebSocket, Task> _peers;
     public WebSocket socket;
-    public Server server { get; set; }
-    public Node leftChild { get; set; }
-    public Node rightChild { get; set; }
+    public Server server;
+    public Node left { get; set; }
+    public Node right { get; set; }
     
     public Node(Guid userName, WebSocket socket,DateTime timestamp, Server server)
     {
@@ -30,10 +34,21 @@ public class Node
         this.server = server;
         this.timestamp = timestamp;
         _peers = new ConcurrentDictionary<WebSocket, Task>();
-        this.leftChild = null;
-        this.rightChild = null;
+        this.left = null;
+        this.right = null;
+        GenerateKeys();
         this._wavechain = new Wavechain(this);
         Console.WriteLine($"User connected: {userId}");
+    }
+    
+    private void GenerateKeys()
+    {
+        using (var rsa = new RSACryptoServiceProvider(2048))
+        {
+            rsa.PersistKeyInCsp = false;
+            privateKey = rsa.ExportRSAPrivateKey();
+            publicKey = rsa.ExportRSAPublicKey();
+        }
     }
     public void AddBlock(Block newBlock)
     {
@@ -43,7 +58,7 @@ public class Node
     }
     public async Task SendWelcomeMessage(WebSocket webSocket)
     {
-        var buffer = ObjectSerialization.Serialize(new ContractValidationRequest(userId.ToString(), null, RequestCode.User, ActionCode.UserId, new byte[0], null));
+        var buffer = new ObjectSerialization().Serialize(new ContractValidationRequest(userId.ToString(),publicKey,privateKey, null, RequestCode.User, ActionCode.UserId, "", null));
         await SendData(buffer);
     }
     
@@ -87,9 +102,16 @@ public class Node
     {
         byte[] receivedData = new byte[resultCount];
         Array.Copy(buffer, receivedData, resultCount);
-        ObjectSerialization.Deserialize(receivedData, OnProcessMessage);
+        var value = new ObjectSerialization().Deserialize<ContractValidationRequest>(receivedData) as ContractValidationRequest;
+        if (value != null) OnProcessMessage(value.requestCode, value.actionCode, value);
     }
 
     public void OnProcessMessage(RequestCode requestCode, ActionCode actionCode, ContractValidationRequest output)
         => new ControllerManager().HandleRequest(requestCode, actionCode, output, this);
+
+    public async void ExecutePersistence()
+    {
+        var _redisService = new RedisService();
+        await _redisService.SaveObjectAsync($"{userId}", _wavechain.root);
+    }
 }

@@ -29,7 +29,6 @@ public class Server
         _smartContractController = new SmartContractController(this);
         _smartContractExecutor = new SmartContractExecutor(this);
         _smartContractValidator = new SmartContractValidator(this);
-        _meshwavePersistence = new MeshwavePersistence(this);
         root = null;
     }
     public void AddBlock(ValidationBlock newBlock)
@@ -49,9 +48,9 @@ public class Server
         if (validator != null)
         {
             var lastBlock = validator._wavechain.GetBlock();
-            byte[] previusHash = lastBlock == null ? new byte[0] : lastBlock.hash; 
+            string previusHash = lastBlock == null ? "" : lastBlock.hash; 
             //string obj = $"{{{contract.code}}}{{{previusHash}}}{{{contract.data}}}";
-            var serial = ObjectSerialization.Serialize(new ContractValidationRequest(validator.userId.ToString(), contract, RequestCode.Validation, ActionCode.Operation, previusHash, lastBlock));
+            var serial = new ObjectSerialization().Serialize(new ContractValidationRequest(validator.userId.ToString(),new byte[0],new byte[0], contract, RequestCode.Validation, ActionCode.Operation, previusHash, lastBlock));
             //var obj = new ContractValidationRequest(contract,lastBlock == null? new byte[0]:lastBlock.hash));
             await validator.SendData(serial);
         }
@@ -91,28 +90,28 @@ public class Server
                     var node = currentLevelNodes.Dequeue();
 
                     // Verifica se há espaço no nó atual
-                    if (node.leftChild == null)
+                    if (node.left == null)
                     {
-                        node.leftChild = newNode; // Inserir no filho esquerdo
+                        node.left = newNode; // Inserir no filho esquerdo
                         inserted = true;
                         break;
                         return;
                     }
-                    else if (node.rightChild == null)
+                    else if (node.right == null)
                     {
-                        node.rightChild = newNode; // Inserir no filho direito
+                        node.right = newNode; // Inserir no filho direito
                         inserted = true;
                         break;
                     }
 
                     // Se o nó tem filhos, adicione-os ao próximo nível
-                    if (node.leftChild != null)
+                    if (node.left != null)
                     {
-                        nextLevelNodes.Enqueue(node.leftChild);
+                        nextLevelNodes.Enqueue(node.left);
                     }
-                    if (node.rightChild != null)
+                    if (node.right != null)
                     {
-                        nextLevelNodes.Enqueue(node.rightChild);
+                        nextLevelNodes.Enqueue(node.right);
                     }
                 }
 
@@ -161,8 +160,8 @@ public class Server
 
         nodes.Add(node);
 
-        CollectNodes(node.leftChild, nodes);
-        CollectNodes(node.rightChild, nodes);
+        CollectNodes(node.left, nodes);
+        CollectNodes(node.right, nodes);
     }
     
     public int GetHeight()
@@ -177,8 +176,8 @@ public class Server
             return 0;
         }
 
-        int leftHeight = GetHeightOfNode(node.leftChild);
-        int rightHeight = GetHeightOfNode(node.rightChild);
+        int leftHeight = GetHeightOfNode(node.left);
+        int rightHeight = GetHeightOfNode(node.right);
 
         return Math.Max(leftHeight, rightHeight) + 1;
     }
@@ -197,11 +196,11 @@ public class Server
         }
 
         if (userId != node.userId){
-            return SearchNode(node.leftChild, userId);
+            return SearchNode(node.left, userId);
         }
         else
         {
-            return SearchNode(node.rightChild, userId);
+            return SearchNode(node.right, userId);
         }
     }
 

@@ -6,7 +6,6 @@ namespace Core;
 
 public class Wavechain
 {
-    
     public Block root { get; set; }
     public int difficulty; // Dificuldade da mineração
     Node node { get; set; }
@@ -45,7 +44,6 @@ public class Wavechain
         if (root == null)
         {
             root = newNode;
-            root.CalculateHash(new byte[0]);
         }
         else
         {
@@ -165,7 +163,7 @@ public class Wavechain
 
     private bool AddBlock(SmartContract smartContract)
     {
-        var newBlock = new Block(Guid.NewGuid(), DateTime.UtcNow,FindLastHash(root), "", new byte[0]);
+        var newBlock = new Block(0, DateTime.UtcNow,FindLastHash(root), "", new List<Transaction>(), new byte[0]);
         return AddToTree(root, newBlock);
     }
     private bool AddToTree(Block parent, Block newBlock)
@@ -191,9 +189,9 @@ public class Wavechain
 
         return addedToLeft;
     }
-    private byte[] FindLastHash(Block current)
+    private string FindLastHash(Block current)
     {
-        if (current == null) return new byte[0];
+        if (current == null) return "";
 
         if (current.left == null || current.right == null)
             return current.hash;
@@ -309,12 +307,12 @@ public class Wavechain
     }
 
     // Buscar um nó por UserId
-    public Block Search(Guid index)
+    public Block Search(int index)
     {
         return SearchNode(root, index);
     }
 
-    private Block SearchNode(Block block, Guid index)
+    private Block SearchNode(Block block, int index)
     {
         if (block == null || block.index == index)
         {

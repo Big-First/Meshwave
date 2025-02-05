@@ -29,6 +29,7 @@
 
     <ItemGroup>
       <Folder Include="Contracts" />
+      <Folder Include="Hosts" />
       <Folder Include="Interfaces" />
       <Folder Include="Structs" />
     </ItemGroup>
