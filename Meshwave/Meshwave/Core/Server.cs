@@ -8,8 +8,10 @@ namespace Core;
 
 public class Server
 {
-    
+    public List<Node> _nodes = new List<Node>();
+
     public Queue<ValidationBlock> _blocks = new ();
+    public Dictionary<string, Block> blockchain = new ();
     public event EventHandler<ValidationBlock>? BlockAdded;
     
     public Queue<SmartContract> _smartContracts = new ();
@@ -47,11 +49,9 @@ public class Server
         Node validator = SelectRandomValidator();
         if (validator != null)
         {
-            var lastBlock = validator._wavechain.GetBlock();
+            var lastBlock = validator.GetBlock();
             string previusHash = lastBlock == null ? "" : lastBlock.hash; 
-            //string obj = $"{{{contract.code}}}{{{previusHash}}}{{{contract.data}}}";
             var serial = new ObjectSerialization().Serialize(new ContractValidationRequest(validator.userId.ToString(),new byte[0],new byte[0], contract, RequestCode.Validation, ActionCode.Operation, previusHash, lastBlock));
-            //var obj = new ContractValidationRequest(contract,lastBlock == null? new byte[0]:lastBlock.hash));
             await validator.SendData(serial);
         }
         
@@ -140,7 +140,7 @@ public class Server
         if (allNodes.Count == 0) return null;
 
         int index = random.Next(allNodes.Count);
-        return allNodes[index];  // Retorna um nó aleatório
+        return allNodes[index];
     }
     public List<Node> SelectAllNodes()
     {
@@ -218,5 +218,12 @@ public class Server
             _blocks.Add(b._wavechain);
         });
         return _blocks;
+    }
+
+    public async Task<object?> LoadBlockchain(Guid index)
+    {
+        var node = _nodes.Find(x => x.userId == index);
+        if (node == null) return StatusCodes.Status404NotFound;
+        return node.root;
     }
 }

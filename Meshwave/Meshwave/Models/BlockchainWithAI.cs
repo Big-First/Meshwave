@@ -5,14 +5,13 @@ namespace Models;
 public class BlockchainWithAI
 {
     private ProofOfStake pos;
-    private AIagent ai;
+    private AI_Agent ai;
     public List<Block> Chain { get; private set; }
 
     public BlockchainWithAI()
     {
         Chain = new List<Block>();
-        //pos = new ProofOfStake();
-        ai = new AIagent();
+        ai = new AI_Agent();
     }
 
     public void AddStake(string nodeId, decimal amount)
@@ -32,18 +31,18 @@ public class BlockchainWithAI
 
         if (string.IsNullOrEmpty(suggestedValidator))
         {
-            Console.WriteLine("❌ Nenhum nó confiável disponível para validação!");
+            Console.WriteLine(" Nenhum nó confiável disponível para validação!");
             return;
         }
-        Console.WriteLine($"🎯 Nó selecionado pela IA: {suggestedValidator}");
+        Console.WriteLine($" Nó selecionado pela IA: {suggestedValidator}");
         if (newBlock.IsValid())
         {
             Chain.Add(newBlock);
-            Console.WriteLine($"✅ Bloco {newBlock.index} validado por {suggestedValidator}.");
+            Console.WriteLine($" Bloco {newBlock.index} validado por {suggestedValidator}.");
         }
         else
         {
-            Console.WriteLine($"❌ Validação falhou. O nó {suggestedValidator} foi rejeitado!");
+            Console.WriteLine($" Validação falhou. O nó {suggestedValidator} foi rejeitado!");
         }
         */
     }

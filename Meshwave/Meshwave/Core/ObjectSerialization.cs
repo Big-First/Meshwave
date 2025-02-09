@@ -13,10 +13,7 @@ public class ObjectSerialization
     public ObjectSerialization(){}
     public  byte[] Serialize(ContractValidationRequest request)
     {
-        //Stopwatch sw = Stopwatch.StartNew();
         byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(request);
-        //sw.Stop();
-        //Console.WriteLine($"Tempo de serialização: {sw.ElapsedMilliseconds}ms");
         return bytes;
     }
 
@@ -24,8 +21,6 @@ public class ObjectSerialization
     {
         T objDeserializado = default(T);
         objDeserializado = JsonSerializer.Deserialize<T>(data);
-        //sw.Stop();
-        //Console.WriteLine($"Tempo de desserialização: {sw.ElapsedMilliseconds}ms");
         return objDeserializado;
     }
 }

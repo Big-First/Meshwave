@@ -7,9 +7,8 @@ namespace Core;
 public class Wavechain
 {
     public Block root { get; set; }
-    public int difficulty; // Dificuldade da mineração
+    public int difficulty;
     Node node { get; set; }
-
     public Wavechain(Node node)
     {
         this.node = node;
@@ -133,7 +132,7 @@ public class Wavechain
                     }
                     else if (node.right == null)
                     {
-                        return node.left;
+                        return node;
                     }
 
                     // Se o nó tem filhos, adicione-os ao próximo nível

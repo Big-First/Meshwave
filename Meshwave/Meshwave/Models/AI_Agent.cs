@@ -1,10 +1,10 @@
 ﻿namespace Models;
 
-public class AIagent
+public class AI_Agent
 {
     private Dictionary<string, List<decimal>> transactionHistory;
 
-    public AIagent()
+    public AI_Agent()
     =>  transactionHistory = new Dictionary<string, List<decimal>>();
     
     public void RegisterTransaction(string nodeId, decimal amount)
@@ -24,12 +24,10 @@ public class AIagent
         double variance = transactions.Select(x => Math.Pow((double)(x - (decimal)mean), 2)).Average();
         double stdDev = Math.Sqrt(variance);
 
-        // Se o último valor for muito diferente da média, pode ser fraude
         decimal lastTransaction = transactions.Last();
         return Math.Abs((double)(lastTransaction - (decimal)mean)) > 2 * stdDev;
     }
-
-    // Ajuda a selecionar o melhor nó para validação
+    
     public string SuggestValidator(Dictionary<string, decimal> stakes)
     {
         if (stakes.Count == 0)

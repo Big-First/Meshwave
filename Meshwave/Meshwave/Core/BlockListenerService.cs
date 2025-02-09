@@ -19,10 +19,7 @@ public class BlockListenerService : BackgroundService
 
     private async void OnBlockAdded(object? sender, ValidationBlock block)
     {
-        Console.WriteLine($"Novo bloco : hash {block.block.index} \t  {DateTime.UtcNow}");
-        var _redisService = new RedisService();
-        await _redisService.SaveObjectAsync($"{block.block.index}", block.block);
-        //_server.ValidationBlockchain(block);
+        Console.WriteLine($"Novo bloco : hash {block.block.hash} \t  {DateTime.UtcNow}");
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)

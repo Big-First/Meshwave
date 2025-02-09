@@ -84,9 +84,9 @@ app.MapGet("/showTree", () =>
     return Results.Ok(server.root);
 });
 
-app.MapGet("/showBlocksTree", async (string index) =>
+app.MapGet("/showBlockchain", async (Guid index) =>
 {
-    var blockchain = await new MeshwavePersistence().LoadBlockchain(index);
+    var blockchain = await server.LoadBlockchain(index);
     return Results.Ok(blockchain);
 });
 
