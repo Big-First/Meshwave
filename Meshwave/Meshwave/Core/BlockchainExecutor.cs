@@ -20,7 +20,8 @@ public class BlockchainExecutor
         if (block != null)
         {
             node.server.AddBlock(new ValidationBlock(node.userId.ToString(), block));
-            node._wavechain.Insert(block);
+            node.Insert(block);
+            node.ExecutePersistence();
         }
     }
 }

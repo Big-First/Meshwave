@@ -15,7 +15,7 @@ public class BlockchainTree
 
         private Block CreateGenesisBlock()
         {
-            var genesisBlock = new Block(Guid.NewGuid(), DateTime.Now,  "", "");
+            var genesisBlock = new Block(0, DateTime.Now,  "", "", new List<Transaction>(), new byte[0]);
             //genesisBlock.MineBlock(_difficulty);
             return genesisBlock;
         }

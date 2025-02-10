@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "IBYe+fznJgI=",
+  "success": true,
+  "projectFilePath": "I:\\atlantisNetworkClientTeste\\atlantisNetworkClientTeste.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\MPLopes\\.nuget\\packages\\messagepack\\3.1.2\\messagepack.3.1.2.nupkg.sha512",
+    "C:\\Users\\MPLopes\\.nuget\\packages\\messagepack.annotations\\3.1.2\\messagepack.annotations.3.1.2.nupkg.sha512",
+    "C:\\Users\\MPLopes\\.nuget\\packages\\messagepackanalyzer\\3.1.2\\messagepackanalyzer.3.1.2.nupkg.sha512",
+    "C:\\Users\\MPLopes\\.nuget\\packages\\microsoft.net.stringtools\\17.11.4\\microsoft.net.stringtools.17.11.4.nupkg.sha512",
+    "C:\\Users\\MPLopes\\.nuget\\packages\\system.formats.cbor\\9.0.1\\system.formats.cbor.9.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

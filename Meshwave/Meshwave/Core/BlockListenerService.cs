@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using Data;
+using Models;
 
 namespace Core;
 
@@ -16,10 +17,9 @@ public class BlockListenerService : BackgroundService
         _server.BlockAdded += OnBlockAdded;
     }
 
-    private void OnBlockAdded(object? sender, ValidationBlock block)
+    private async void OnBlockAdded(object? sender, ValidationBlock block)
     {
-        Console.WriteLine($"{block.userId} \t Novo bloco adicionado: hash {block.block.hash} \t Timestamp {block.block.timestamp}");
-        //_server.ValidationBlockchain(block);
+        Console.WriteLine($"Novo bloco : hash {block.block.hash} \t  {DateTime.UtcNow}");
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)

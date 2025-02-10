@@ -8,10 +8,9 @@ public class MeshwavePersistence
     Queue<Block> _blocks = new Queue<Block>();
     Queue<SmartContract> _smartContracts = new Queue<SmartContract>();
     SemaphoreSlim _signal = new SemaphoreSlim(0);
-    Server _server { get; set; }
+    Node node { get; set; }
 
-    public MeshwavePersistence(Server server)
-        => _server = server;
+    public MeshwavePersistence(){}
 
     public async Task SaveBlockchain(Block block)
     {

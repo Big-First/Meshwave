@@ -1,19 +1,29 @@
 ﻿using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using MessagePack;
 
 namespace Models;
 
+[MessagePackObject]
 public class Transaction
 {
     public Transaction(){}
+    [Key(0)]
     public Guid index { get; set; }
+    [Key(1)]
     public string sender { get; set; }
+    [Key(2)]
     public string receiver { get; set; }
+    [Key(3)]
     public byte[] data { get; set; }
+    [Key(4)]
     public decimal amount { get; set; }
+    [Key(5)]
     public byte[] hash { get; set; }
+    [Key(6)]
     public SmartContract? contract { get; set; }
+    [Key(7)]
     public DateTime timestamp { get; set; }
 
     public Transaction(Guid index,string sender, string receiver, decimal amount, DateTime timestamp, SmartContract? contract = null)

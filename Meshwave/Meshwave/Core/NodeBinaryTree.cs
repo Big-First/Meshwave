@@ -41,27 +41,26 @@ public class NodeBinaryTree
                     var node = currentLevelNodes.Dequeue();
 
                     // Verifica se há espaço no nó atual
-                    if (node.leftChild == null)
+                    if (node.left == null)
                     {
-                        node.leftChild = newNode; // Inserir no filho esquerdo
+                        node.left = newNode; // Inserir no filho esquerdo
                         inserted = true;
                         break;
                     }
-                    else if (node.rightChild == null)
+                    else if (node.right == null)
                     {
-                        node.rightChild = newNode; // Inserir no filho direito
+                        node.right = newNode; // Inserir no filho direito
                         inserted = true;
                         break;
                     }
-
                     // Se o nó tem filhos, adicione-os ao próximo nível
-                    if (node.leftChild != null)
+                    if (node.left != null)
                     {
-                        nextLevelNodes.Enqueue(node.leftChild);
+                        nextLevelNodes.Enqueue(node.left);
                     }
-                    if (node.rightChild != null)
+                    if (node.right != null)
                     {
-                        nextLevelNodes.Enqueue(node.rightChild);
+                        nextLevelNodes.Enqueue(node.right);
                     }
                 }
 
@@ -92,8 +91,8 @@ public class NodeBinaryTree
             return 0;
         }
 
-        int leftHeight = GetHeightOfNode(node.leftChild);
-        int rightHeight = GetHeightOfNode(node.rightChild);
+        int leftHeight = GetHeightOfNode(node.left);
+        int rightHeight = GetHeightOfNode(node.right);
 
         return Math.Max(leftHeight, rightHeight) + 1;
     }
@@ -112,11 +111,11 @@ public class NodeBinaryTree
         }
 
         if (userId != node.userId){
-            return SearchNode(node.leftChild, userId);
+            return SearchNode(node.left, userId);
         }
         else
         {
-            return SearchNode(node.rightChild, userId);
+            return SearchNode(node.right, userId);
         }
     }
     // Percorre a árvore e retorna um nó aleatório
@@ -139,7 +138,7 @@ public class NodeBinaryTree
 
         nodes.Add(node);
 
-        CollectNodes(node.leftChild, nodes);
-        CollectNodes(node.rightChild, nodes);
+        CollectNodes(node.left, nodes);
+        CollectNodes(node.right, nodes);
     }
 }
