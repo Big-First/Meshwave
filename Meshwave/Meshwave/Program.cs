@@ -84,7 +84,7 @@ app.MapGet("/showTree", () =>
     return Results.Ok(server.root);
 });
 
-app.MapGet("/showBlockchain", async (Guid index) =>
+app.MapGet("/showBlockchain/{index}", async (Guid index) =>
 {
     var blockchain = await server.LoadBlockchain(index);
     return Results.Ok(blockchain);

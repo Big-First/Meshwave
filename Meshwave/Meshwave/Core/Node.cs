@@ -209,7 +209,7 @@ public class Node
                     }
                     else if (node.right == null)
                     {
-                        return node;
+                        return node.left;
                     }
 
                     // Se o nó tem filhos, adicione-os ao próximo nível
