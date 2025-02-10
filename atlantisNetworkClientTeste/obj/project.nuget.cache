@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "IBYe+fznJgI=",
+  "dgSpecHash": "/K2DvNB+o+o=",
   "success": true,
-  "projectFilePath": "I:\\atlantisNetworkClientTeste\\atlantisNetworkClientTeste.csproj",
+  "projectFilePath": "I:\\Meshwave\\atlantisNetworkClientTeste\\atlantisNetworkClientTeste.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\MPLopes\\.nuget\\packages\\messagepack\\3.1.2\\messagepack.3.1.2.nupkg.sha512",
     "C:\\Users\\MPLopes\\.nuget\\packages\\messagepack.annotations\\3.1.2\\messagepack.annotations.3.1.2.nupkg.sha512",
