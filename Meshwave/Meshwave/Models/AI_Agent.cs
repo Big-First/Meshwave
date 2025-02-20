@@ -32,8 +32,7 @@ public class AI_Agent
     {
         if (stakes.Count == 0)
             return null;
-
-        // Escolhe o nó com maior stake e sem histórico de fraude
+        
         var sortedNodes = stakes.OrderByDescending(x => x.Value)
             .Where(x => !DetectFraud(x.Key))
             .ToList();

@@ -12,7 +12,6 @@ public class BlockListenerService : BackgroundService
     {
         _server = server;
         _logger = logger;
-
         // Inscreve-se no evento de adição de blocos
         _server.BlockAdded += OnBlockAdded;
     }
