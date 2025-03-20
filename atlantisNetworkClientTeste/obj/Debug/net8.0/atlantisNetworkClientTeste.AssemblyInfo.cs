@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("atlantisNetworkClientTeste")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ce837f219f5d132cd5746216bcaf5d92e6bfe946")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a844d23040242d99560b4896f8bb6a868b640617")]
 [assembly: System.Reflection.AssemblyProductAttribute("atlantisNetworkClientTeste")]
 [assembly: System.Reflection.AssemblyTitleAttribute("atlantisNetworkClientTeste")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
