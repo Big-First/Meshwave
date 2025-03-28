@@ -36,7 +36,7 @@ app.MapGet("/input", async context =>
         var webSocket = await context.WebSockets.AcceptWebSocketAsync();
         var newNode = new Node(Guid.NewGuid(), webSocket, DateTime.Now, server);
         server.Insert(newNode);
-        await newNode.SendWelcomeMessage(webSocket);
+        //await newNode.SendWelcomeMessage(webSocket);
         await newNode.Echo(context, webSocket);
     }
     else
